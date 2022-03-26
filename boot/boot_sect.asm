@@ -2,22 +2,37 @@
 [org 0x7c00]
 
 mov [BOOT_DISK], dl  ; store the current first disk in variable
-mov bx, HELLO
-call print
 mov bp, 0x9000 ; The stack address
 mov sp, bp ; if the stack is empty, sp is bp
-jmp $  ; infinite loop
+
+mov bx, REAL_MODE_MSG
+call print
+
+call switch_to_pm
+
+jmp $  ; This line will never be executed after switch_to_pm
 
 
 
 %include "boot_print.asm"
+%include "pm/print.asm"
+%include "pm/gdt.asm"
+%include "pm/switch.asm"
+
+
+[bits 32]
+BEGIN_PM:
+    mov ebx, PROT_MODE_MSG
+    call pm_print_string
+    jmp $
 
 
 BOOT_DISK: db 0 ; Just a variable  of the first disk
 
 
-HELLO:
-    db "Hello, World", 0
+REAL_MODE_MSG db "Starting in 16-bit real mode", 0
+PROT_MODE_MSG db "Loaded 32-bit protected mode", 0
+
 
 
 ; $ - the currnet address
