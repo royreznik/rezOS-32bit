@@ -1,4 +1,7 @@
-void main() {
-    *(char*)0xb8000 = 'Q';
+#include "../drivers/screen.h"
+
+int main() {
+    clear_screen();
+    kprint("Yey!\n that is working!");
     return;
 }
