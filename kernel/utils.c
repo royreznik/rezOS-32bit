@@ -1,6 +1,7 @@
 #include "utils.h"
 
-void mem_copy(char *source, char *dest, int nbytes) {
+
+void mem_copy(int8_t *source, int8_t *dest, int nbytes) {
     for (int i = 0; i < nbytes; ++i) {
         *(dest + i) = *(source + i);
     }

@@ -37,7 +37,7 @@ int kprint(char *message) {
  * @return
  */
 int putc(char c, int col, int row, char attr) {
-    unsigned char *vidmem = (unsigned char *) VIDEO_ADDRESS;
+    uint8_t *vidmem = (uint8_t *) VIDEO_ADDRESS;
     if (!attr) attr = WHITE_ON_BLACK;
 
     if (col >= MAX_COLS || row >= MAX_ROWS) {
@@ -60,10 +60,12 @@ int putc(char c, int col, int row, char attr) {
     if (offset >= MAX_ROWS * MAX_COLS * 2) {
         for (int i = 1; i < MAX_ROWS; ++i) {
             int dest_line = i - 1;
-            mem_copy(CALC_OFFSET(0, i) + vidmem, CALC_OFFSET(0, dest_line) + vidmem, MAX_COLS * 2);
+            mem_copy((int8_t*)(CALC_OFFSET(0, i) + vidmem),
+                     (int8_t*)(CALC_OFFSET(0, dest_line) + vidmem),
+                     MAX_COLS * 2);
         }
         int last_row = MAX_ROWS - 1;
-        char* last_line = CALC_OFFSET(0, last_row) + VIDEO_ADDRESS;
+        char* last_line = CALC_OFFSET(0, last_row) + (uint8_t)VIDEO_ADDRESS;
         for (int i = 0; i < MAX_COLS * 2; ++i) {
             last_line[i] = 0;
         }

@@ -1,3 +1,4 @@
+#include "../cpu/types.h"
 #define VIDEO_ADDRESS 0xb8000
 #define MAX_ROWS 24
 #define MAX_COLS 80
