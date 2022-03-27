@@ -1,6 +1,5 @@
 #include "../drivers/screen.h"
 #include "utils.h"
-#include "../cpu/types.h"
 
 int main() {
     clear_screen();
