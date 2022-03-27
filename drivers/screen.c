@@ -1,6 +1,6 @@
 #include "screen.h"
 #include "ports.h"
-
+#include "../kernel/utils.h"
 #define CALC_OFFSET(col, row) (2 * (row * MAX_COLS + col))
 #define CALC_OFFSET_ROW(offset) (offset / (2 * MAX_COLS))
 #define CALC_OFFSET_COL(offset) ((offset - (CALC_OFFSET_ROW(offset)*2*MAX_COLS))/2)
@@ -12,22 +12,18 @@ void set_cursor_offset(int offset);
 int putc(char c, int col, int row, char attr);
 
 int kprint_at(char *message, int col, int row) {
-    int offset = (col >= 0 && row >= 0) ? CALC_OFFSET(col, row) : get_cursor_offset();
-    col = CALC_OFFSET_COL(offset);
-    row = CALC_OFFSET_ROW(offset);
-
+    int offset;
     int i = 0;
     while (message[i] != 0) {
         offset = putc(message[i++], col, row, WHITE_ON_BLACK);
         col = CALC_OFFSET_COL(offset);
         row = CALC_OFFSET_ROW(offset);
-
     }
     return i;
 }
 
 int kprint(char *message) {
-    kprint_at(message, -1, -1);
+    return kprint_at(message, -1, -1);
 }
 
 
@@ -53,12 +49,26 @@ int putc(char c, int col, int row, char attr) {
     int offset = (col >= 0 && row >= 0) ? CALC_OFFSET(col, row) : get_cursor_offset();
 
     if (c == '\n') {
-        row = CALC_OFFSET_ROW(offset);
-        offset = CALC_OFFSET(0, row + 1);
+        row = CALC_OFFSET_ROW(offset) + 1;
+        offset = CALC_OFFSET(0, row);
     } else {
         vidmem[offset] = c;
         vidmem[offset + 1] = attr;
         offset += 2;
+    }
+
+    if (offset >= MAX_ROWS * MAX_COLS * 2) {
+        for (int i = 1; i < MAX_ROWS; ++i) {
+            int dest_line = i - 1;
+            mem_copy(CALC_OFFSET(0, i) + vidmem, CALC_OFFSET(0, dest_line) + vidmem, MAX_COLS * 2);
+        }
+        int last_row = MAX_ROWS - 1;
+        char* last_line = CALC_OFFSET(0, last_row) + VIDEO_ADDRESS;
+        for (int i = 0; i < MAX_COLS * 2; ++i) {
+            last_line[i] = 0;
+        }
+
+        offset -= (2 * MAX_COLS);
     }
     set_cursor_offset(offset);
     return offset;

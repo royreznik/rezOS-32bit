@@ -30,5 +30,5 @@ unsigned short read_word_from_port(unsigned short port) {
 }
 
 void write_word_to_port(unsigned short port, unsigned short data) {
-    __asm__("out %%al, %%dx" : : "a" (data), "d" (port));
+    __asm__("out %%ax, %%dx" : : "a" (data), "d" (port));
 }
