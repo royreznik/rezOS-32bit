@@ -47,13 +47,13 @@ typedef struct {
 
 typedef struct {
     uint16_t limit;  // How much address will be the idt
-    idt_gate_t base;  // the first gate in the idt
+    uint32_t base;  // the first gate in the idt
 } __attribute__((packed)) idt_register_t; // Also, can be called idt descriptor
 
 
 #define IDT_ENTRIES 256
-idt_gate_t idt[IDT_ENTRIES];
-idt_register_t idt_reg = { IDT_ENTRIES * sizeof(idt) - 1, idt };
+extern idt_gate_t idt[IDT_ENTRIES];
+extern idt_register_t idt_reg;
 
 
 void set_idt_gate(int interrupt, void *base, uint16_t segment_descriptor, uint8_t flags);
