@@ -79,8 +79,8 @@ int putc(char c, int col, int row, char attr) {
 
 
 void clear_screen() {
-    int screen_size = MAX_COLS * MAX_ROWS;
-    int *screen = (int *) VIDEO_ADDRESS;
+    uint8_t screen_size = MAX_COLS * MAX_ROWS;
+    uint8_t *screen = (uint8_t *) VIDEO_ADDRESS;
 
     for (int i = 0; i < screen_size; ++i) {
         screen[i * 2] = ' ';
