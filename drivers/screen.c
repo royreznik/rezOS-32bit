@@ -64,8 +64,9 @@ int putc(char c, int col, int row, char attr) {
                      (int8_t*)(CALC_OFFSET(0, dest_line) + vidmem),
                      MAX_COLS * 2);
         }
+
         int last_row = MAX_ROWS - 1;
-        char* last_line = CALC_OFFSET(0, last_row) + (uint8_t)VIDEO_ADDRESS;
+        uint8_t* last_line = CALC_OFFSET(0, last_row) + (uint8_t*)VIDEO_ADDRESS;
         for (int i = 0; i < MAX_COLS * 2; ++i) {
             last_line[i] = 0;
         }

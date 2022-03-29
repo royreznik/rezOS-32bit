@@ -74,9 +74,8 @@ void initialize_isr() {
 }
 
 void isr_handler(registers_t r) {
-    kprint("Recived interupt!:");
+    kprint("\nReceived interrupt!:");
     char s[3];
     i_to_a(r.interrupt, s);
     kprint(s);
-    kprint("\n");
 }
