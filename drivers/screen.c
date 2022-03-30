@@ -14,11 +14,12 @@ void set_cursor_offset(int offset);
 
 int putc(char c, int col, int row, char attr);
 
-int kprint_at(char *message, int col, int row) {
+int kprint_at(char *message, int col, int row, char attr) {
     int offset;
     int i = 0;
+
     while (message[i] != 0) {
-        offset = putc(message[i++], col, row, WHITE_ON_BLACK);
+        offset = putc(message[i++], col, row, attr);
         col = CALC_OFFSET_COL(offset);
         row = CALC_OFFSET_ROW(offset);
     }
@@ -26,7 +27,11 @@ int kprint_at(char *message, int col, int row) {
 }
 
 int kprint(char *message) {
-    return kprint_at(message, -1, -1);
+    return kprint_at(message, -1, -1, WHITE_ON_BLACK);
+}
+
+int kprint_color(char *message, char attr) {
+    return kprint_at(message, -1, -1, attr);
 }
 
 int kprint_backspace() {
