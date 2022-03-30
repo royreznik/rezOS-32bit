@@ -1,8 +1,10 @@
-//
-// Created by root on 3/29/22.
-//
+#ifndef TIMER_H
+#define TIMER_H
 
-#ifndef MY_OS_TIMER_H
-#define MY_OS_TIMER_H
+#include "types.h"
 
-#endif //MY_OS_TIMER_H
+#define TIMER_INTERRUPT 32
+
+void init_timer(uint32_t freq);
+
+#endif

@@ -56,7 +56,7 @@ extern idt_gate_t idt[IDT_ENTRIES];
 extern idt_register_t idt_reg;
 
 
-void set_idt_gate(int interrupt, void *base, uint16_t segment_descriptor, uint8_t flags);
+void set_idt_gate(int interrupt, uint32_t base, uint16_t segment_descriptor, uint8_t flags);
 
 void enable_idt_gate(int interrupt);
 

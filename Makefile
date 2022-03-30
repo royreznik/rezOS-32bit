@@ -12,7 +12,7 @@ CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
 GDB = /usr/bin/gdb-multiarch
 LD = /usr/local/i386elfgcc/bin/i386-elf-ld
 # -g: Use debugging symbols in gcc
-CFLAGS = -g -ffreestanding -Wall -Wextra -fno-exceptions -m32
+CFLAGS = -g -ffreestanding -Wall -Wextra -fno-exceptions -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector
 
 all: clean run
 
@@ -51,4 +51,4 @@ debug: os-image.bin kernel.elf
 
 clean:
 	rm -rf *.bin *.dis *.o os-image.bin *.elf
-	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o
+	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o

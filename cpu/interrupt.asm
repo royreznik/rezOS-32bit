@@ -1,58 +1,57 @@
 [EXTERN isr_handler]
 [EXTERN irq_handler]
 
-; This is a common ISR stub, saves the processor state, sets up the kernel mode segments,
-; call the C-level fault handler, and finally restore the stack frame.
+;; This is a common ISR stub, saves the processor state, sets up the kernel mode segments,
+;; call the C-level fault handler, and finally restore the stack frame.
 isr_common_stub:
-    pusha               ; Push edi,esi,ebp,esp,ebx,edx,ecx,eax
+    ; 1. Save CPU state
+	pusha ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax
+	mov ax, ds ; Lower 16-bits of eax = ds.
+	push eax ; save the data segment descriptor
+	mov ax, 0x10  ; kernel data segment descriptor
+	mov ds, ax
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
+	push esp ; registers_t *r
+    ; 2. Call C handler
+    cld ; C code following the sysV ABI requires DF to be clear on function entry
+	call isr_handler
 
-    mov ax, ds          ; Lower 16 bit of eax = ds.
-    push eax            ; save the data segment descriptor
+    ; 3. Restore state
+	pop eax
+    pop eax
+	mov ds, ax
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
+	popa
+	add esp, 8 ; Cleans up the pushed error code and pushed ISR number
+	iret ; pops 5 things at once: CS, EIP, EFLAGS, SS, and ESP
 
-    mov ax, 0x10        ; load the kernel data segment descriptor
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-
-    call isr_handler
-
-    pop eax             ; Reload the original data segment descriptor
-    mov ds, ax
-    mov es, ax
-    mov fs ,ax
-    mov gs, ax
-
-    popa                ; pops all
-    add esp, 8          ; clean up the pushed error code and pushed isr number
-    sti
-    iret                ; pip 5 things at once, CS EIP EFLAGS SS, ESP
-
-
+; Common IRQ code. Identical to ISR code except for the 'call'
+; and the 'pop ebx'
 irq_common_stub:
-    pusha               ; Push edi,esi,ebp,esp,ebx,edx,ecx,eax
-
-    mov ax, ds          ; Lower 16 bit of eax = ds.
-    push eax            ; save the data segment descriptor
-
-    mov ax, 0x10        ; load the kernel data segment descriptor
+    pusha
+    mov ax, ds
+    push eax
+    mov ax, 0x10
     mov ds, ax
     mov es, ax
     mov fs, ax
     mov gs, ax
-
-    call irq_handler
-
-    pop eax             ; Reload the original data segment descriptor
-    mov ds, ax
-    mov es, ax
-    mov fs ,ax
-    mov gs, ax
-
-    popa                ; pops all
-    add esp, 8          ; clean up the pushed error code and pushed isr number
-    sti
-    iret                ; pip 5 things at once, CS EIP EFLAGS SS, ESP
+    push esp
+    cld
+    call irq_handler ; Different than the ISR code
+    pop ebx  ; Different than the ISR code
+    pop ebx
+    mov ds, bx
+    mov es, bx
+    mov fs, bx
+    mov gs, bx
+    popa
+    add esp, 8
+    iret
 
 
 
@@ -79,7 +78,7 @@ irq_common_stub:
     [GLOBAL irq%1]
     irq%1:
         cli
-        push byte 0
+        push byte %1
         push byte %2
         call irq_common_stub
 %endmacro
