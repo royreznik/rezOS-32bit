@@ -3,9 +3,14 @@
 #include "ports.h"
 #include "screen.h"
 #include "../libc/function.h"
+#include "../libc/mem.h"
+#include "../libc/string.h"
+#include "../libc/shell.h"
 
 #define BACKSPACE 0x0E
 #define ENTER 0x1C
+
+static char console_buffer[256];
 
 #define SC_MAX 57
 const char *sc_name[] = { "ERROR", "Esc", "1", "2", "3", "4", "5", "6",
@@ -26,11 +31,17 @@ static void keyboard_interrupt_handler(registers_t *regs) {
 
     if (scancode > SC_MAX) {
         return;
+    } else if (scancode == BACKSPACE) {
+        backspace(console_buffer);
+        kprint_backspace();
     } else if (scancode == ENTER) {
         kprint("\n");
+        run_command(console_buffer);
+        console_buffer[0] = '\0';
     } else {
         char letter = sc_ascii[(int)scancode];
         char str[2] = {letter, '\0'};
+        append(console_buffer, letter);
         kprint(str);
     }
     UNUSED(regs);

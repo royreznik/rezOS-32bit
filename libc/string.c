@@ -46,7 +46,6 @@ void backspace(char str[]) {
     str[len-1] = '\0';
 }
 
-
 int str_cmp(char str1[], char str2[]) {
     int i;
     for(i = 0; str1[i] == str2[i]; ++i) {

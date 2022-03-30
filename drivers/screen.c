@@ -6,6 +6,8 @@
 #define CALC_OFFSET_ROW(offset) (offset / (2 * MAX_COLS))
 #define CALC_OFFSET_COL(offset) ((offset - (CALC_OFFSET_ROW(offset)*2*MAX_COLS))/2)
 
+#define BACKSPACE 0x08
+
 int get_cursor_offset();
 
 void set_cursor_offset(int offset);
@@ -25,6 +27,13 @@ int kprint_at(char *message, int col, int row) {
 
 int kprint(char *message) {
     return kprint_at(message, -1, -1);
+}
+
+int kprint_backspace() {
+    int offset = get_cursor_offset() - 2;
+    int row = CALC_OFFSET_ROW(offset);
+    int col = CALC_OFFSET_COL(offset);
+    return putc(BACKSPACE, col, row, WHITE_ON_BLACK);
 }
 
 
@@ -52,6 +61,9 @@ int putc(char c, int col, int row, char attr) {
     if (c == '\n') {
         row = CALC_OFFSET_ROW(offset) + 1;
         offset = CALC_OFFSET(0, row);
+    } else if (c == BACKSPACE) {
+        vidmem[offset] = ' ';
+        vidmem[offset + 1] = attr;
     } else {
         vidmem[offset] = c;
         vidmem[offset + 1] = attr;
