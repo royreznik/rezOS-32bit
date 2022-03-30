@@ -4,7 +4,7 @@
 #include "../kernel/utils.h"
 #include "../drivers/ports.h"
 
-static uint32_t tick = 0;
+uint32_t tick = 0;
 
 void timer_interrupt_handler(registers_t *regs) {
     tick++;
