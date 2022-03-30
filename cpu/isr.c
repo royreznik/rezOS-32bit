@@ -156,9 +156,13 @@ void irq_handler(registers_t *r) {
     }
     write_bytes_to_port(0x20, 0x20);
 
-    isr_t handler = interrupt_handlers[r->interrupt];
-
-    if (handler != 0) {
-        handler(r);
+    if (interrupt_handlers[r->interrupt] != 0) {
+        isr_t handler = interrupt_handlers[r->interrupt];
+        handler(*r);
     }
+
+
+    // if (handler != 0) {
+    //     handler(r);
+    // }
 }
