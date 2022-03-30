@@ -22,7 +22,7 @@ void disable_idt_gate(int interrupt) {
 
 void initialize_idt() {
     // Using __volatile__ makes the compiler not optimize this asm line, avoid cache and ext.
-    idt_reg.limit = IDT_ENTRIES * sizeof(idt) - 1;
+    idt_reg.limit = (uint16_t)IDT_ENTRIES * ((uint8_t )(sizeof(idt) - 1));
     idt_reg.base = (uint32_t) &idt;
     __asm__ __volatile__("lidtl (%0)" : : "r" (&idt_reg));
 }

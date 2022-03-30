@@ -1,18 +1,4 @@
-#include "mem.h"
-
-
-void mem_copy(int8_t *source, int8_t *dest, int nbytes) {
-    for (int i = 0; i < nbytes; ++i) {
-        *(dest + i) = *(source + i);
-    }
-}
-
-void mem_set(uint8_t *dest, uint8_t val, uint32_t len) {
-    uint8_t* tmp = (uint8_t*) dest;
-    for(; len != 0; --len) {
-        *tmp++ = val;
-    }
-}
+#include "string.h"
 
 void i_to_a(int n, char str[]) {
     int i = 0;
@@ -46,4 +32,27 @@ int str_len(char str[]) {
         ++len;
     }
     return len;
+}
+
+
+void append(char str[], char c) {
+    int len = str_len(str);
+    str[len] = c;
+    str[len+1] = '\0';
+}
+
+void backspace(char str[]) {
+    int len = str_len(str);
+    str[len-1] = '\0';
+}
+
+
+int str_cmp(char str1[], char str2[]) {
+    int i;
+    for(i = 0; str1[i] == str2[i]; ++i) {
+        if (str1[i] == '\0') {
+            return 0;
+        }
+    }
+    return str1[i] - str2[i];
 }

@@ -21,4 +21,6 @@ void isr_handler(registers_t *r);
 typedef void (*isr_t)(registers_t*);
 void set_interrupt_handler(uint8_t interrupt, isr_t handler);
 
+void initialize_irq();
+
 #endif

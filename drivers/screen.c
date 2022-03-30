@@ -1,6 +1,7 @@
 #include "screen.h"
 #include "ports.h"
-#include "../kernel/utils.h"
+#include "../libc/mem.h"
+
 #define CALC_OFFSET(col, row) (2 * (row * MAX_COLS + col))
 #define CALC_OFFSET_ROW(offset) (offset / (2 * MAX_COLS))
 #define CALC_OFFSET_COL(offset) ((offset - (CALC_OFFSET_ROW(offset)*2*MAX_COLS))/2)
@@ -79,7 +80,7 @@ int putc(char c, int col, int row, char attr) {
 
 
 void clear_screen() {
-    uint8_t screen_size = MAX_COLS * MAX_ROWS;
+    uint16_t screen_size = MAX_COLS * MAX_ROWS;
     uint8_t *screen = (uint8_t *) VIDEO_ADDRESS;
 
     for (int i = 0; i < screen_size; ++i) {

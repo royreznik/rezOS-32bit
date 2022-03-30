@@ -1,13 +1,13 @@
 #include "timer.h"
 #include "isr.h"
-#include "../drivers/screen.h"
-#include "../kernel/utils.h"
 #include "../drivers/ports.h"
+#include "../libc/function.h"
 
 uint32_t tick = 0;
 
 void timer_interrupt_handler(registers_t *regs) {
     tick++;
+    UNUSED(regs);
 }
 
 

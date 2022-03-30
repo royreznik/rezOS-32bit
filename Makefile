@@ -3,8 +3,8 @@
 # $^ = all dependencies
 
 
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c)
-HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c libc/*.c)
+HEADERS = $(wildcard kernel/*.h drivers/*.h cpu/*.h libc/*.h)
 # Nice syntax for file extension replacement
 OBJ = ${C_SOURCES:.c=.o cpu/interrupt.o}
 
@@ -12,7 +12,8 @@ CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
 GDB = /usr/bin/gdb-multiarch
 LD = /usr/local/i386elfgcc/bin/i386-elf-ld
 # -g: Use debugging symbols in gcc
-CFLAGS = -g -ffreestanding -Wall -Wextra -fno-exceptions -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector
+CFLAGS = -g -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles \
+		 -nodefaultlibs -Wall -Wextra -Werror
 
 all: clean run
 

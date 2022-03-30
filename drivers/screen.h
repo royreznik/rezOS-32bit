@@ -2,8 +2,8 @@
 #define SCREEN_H
 #include "../cpu/types.h"
 #define VIDEO_ADDRESS 0xb8000
-#define MAX_ROWS 25
-#define MAX_COLS 80
+#define MAX_ROWS (uint8_t) 0x19
+#define MAX_COLS (uint8_t) 0x50
 #define WHITE_ON_BLACK 0x0f
 #define RED_ON_WHITE 0xf4
 

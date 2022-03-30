@@ -1,7 +1,9 @@
 #include "isr.h"
 #include "../drivers/screen.h"
 #include "../drivers/ports.h"
-
+#include "timer.h"
+#include "../drivers/keyboard.h"
+#include "../libc/string.h"
 
 isr_t interrupt_handlers[IDT_ENTRIES];
 
@@ -161,4 +163,10 @@ void irq_handler(registers_t *r) {
     if (handler != 0) {
         handler(r);
     }
+}
+
+void initialize_irq() {
+    __asm__ __volatile__("sti");
+    init_timer(50);
+    init_keyboard();
 }
