@@ -4,6 +4,10 @@
 #include "types.h"
 #include "idt.h"
 
+#define TIMER_INTERRUPT 32
+#define KEYBOARD_INTERRUPT 33
+
+
 typedef struct {
     uint32_t ds; /* Data segment selector */
     uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax; /* Pushed by pusha. */

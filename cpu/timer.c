@@ -8,11 +8,6 @@ uint32_t tick = 0;
 
 void timer_interrupt_handler(registers_t *regs) {
     tick++;
-    kprint("Tick: ");
-    char str[256];
-    i_to_a(tick, str);
-    kprint(str);
-    kprint("\n");
 }
 
 
